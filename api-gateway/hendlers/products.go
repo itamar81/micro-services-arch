@@ -1,3 +1,4 @@
+package hendlers
 
 func NewProducts(l *log.Logger) Products{
 	return &Products{l}
