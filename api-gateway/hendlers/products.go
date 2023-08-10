@@ -5,7 +5,10 @@ func NewProducts(l *log.Logger) Products{
 }
 
 func (p *Products) ServerHTTP(rw http.ResponseWriter , r *http.Request){
-	if r.Method == http.MethodGet {package hendlers
+	if r.Method == http.MethodGet {
+		
+	}
+
 
 import (
 	"log"
