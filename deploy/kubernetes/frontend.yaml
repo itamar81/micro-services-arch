@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+  namespace: coffee-shop  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: ghcr.io/itamar81/micro-services-arch/frontend:1.5
+        name: frontend
+        ports:
+        - containerPort: 3000
+          name: web
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # annotations:
+  #   external-dns.alpha.kubernetes.io/hostname: coffee2.<DNS>.
+  labels:
+    app: frontend
+  name: frontend
+  namespace: coffee-shop
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: frontend
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: coffee
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+   
+   
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  namespace: coffee-shop
+spec:
+  rules:
+  - host: "coffee.<DNS>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - "coffee.<DNS>"
+    # reference secret for production TLS certificate
+    secretName:  coffee-prod

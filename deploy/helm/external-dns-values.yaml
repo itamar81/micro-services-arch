@@ -1,0 +1,8 @@
+provider: cloudflare
+cloudflare:
+  ## @param cloudflare.apiToken When using the Cloudflare provider, `CF_API_TOKEN` to set (optional)
+  ##
+  apiToken: <TOKEN>
+  #secretName: "cloudflare-api-token"
+  email: <YOUR_EMAIL>
+  proxied: true

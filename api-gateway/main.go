@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"time"
 
-	handlers "github.com/itamar81/api-gateway/hendlers"
+	handlers "github.com/itamar81/micro-services-arch/api-gateway/hendlers"
 )
 
 
@@ -17,7 +17,7 @@ func main(){
 	port := 9090
 	// sm := http.NewServeMux()
 	// http.ha
-	l := log.New(os.Stdout, "products-api ", log.LstdFlags)
+	l := log.New(os.Stdout, "api-gateway: ", log.LstdFlags)
 
 	// create the handlers
 	ph := handlers.NewProducts(l)

@@ -1,0 +1,39 @@
+
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        cloudflare:
+          email: <YOUR_EMAIL>
+          apiKeySecretRef:
+            name: cloudflare-api-token
+            key: cloudflare_api_token
+      selector:
+        dnsNames:
+        - '<DNS>'
+        - '*.<DNS>'
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  # different name
+  name: coffee-prod
+  namespace: coffee-shop 
+spec:
+  duration: 2h # 90d
+  renewBefore: 1h # 15d
+  # dedicate secret for the TLS cert
+  secretName: coffee-prod
+  issuerRef:
+    # referencing the production issuer
+    name: letsencrypt-prod
+  dnsNames:
+  - coffee.<DNS>
