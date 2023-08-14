@@ -1,0 +1,19 @@
+# ingress:
+#   ## @param ingress.enabled Enable ingress resource for Management console
+#   ##
+#   enabled: true
+#   hostname: rabbitmq.misgavnet.uk
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+   
+#     # reference production issuer
+#     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#   tls: true
+#   existingSecret: "rabbitmq-cert"
+
+service:
+  ## @param service.type Kubernetes Service type
+  ##
+  type: LoadBalancer

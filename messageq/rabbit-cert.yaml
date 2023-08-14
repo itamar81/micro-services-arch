@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  # different name
+  name: rabbitmq-cert
+  namespace: rabbitmq
+spec:
+  duration: 24h # 90d
+  renewBefore: 23h # 15d
+  # dedicate secret for the TLS cert
+  secretName: rabbitmq-cert
+  issuerRef:
+    # referencing the production issuer
+    name: letsencrypt-prod
+  dnsNames:
+  - rabbitmq.misgavnet.uk
