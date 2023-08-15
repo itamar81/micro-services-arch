@@ -12,14 +12,14 @@ spec:
     solvers:
     - dns01:
         cloudflare:
-          email: <YOUR_EMAIL>
+          email: "itamar81@gmail.com"
           apiKeySecretRef:
             name: cloudflare-api-token
             key: cloudflare_api_token
       selector:
         dnsNames:
-        - '<DNS>'
-        - '*.<DNS>'
+        - 'misgavnet.uk'
+        - '*.misgavnet.uk'
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -36,4 +36,4 @@ spec:
     # referencing the production issuer
     name: letsencrypt-prod
   dnsNames:
-  - coffee.<DNS>
+  - coffee.misgavnet.uk

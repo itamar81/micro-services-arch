@@ -34,14 +34,19 @@ func createQueue(queueName string,ch *amqp.Channel,qlog *log.Logger) *amqp.Queue
 	failOnError(qlog,err,"cannot create queue")
 	return &q
 }
-func (u Queue) ServeHTTP(w http.ResponseWriter,r *http.Request){
+func (u *Queue) ServeHTTP(w http.ResponseWriter,r *http.Request){
 	if r.Method == http.MethodGet {
 		u.qlog.Printf("handle get")
 		// u.handleGet(w ,r)
 		return
 	}
 	resBody, err := io.ReadAll(r.Body)
+	// u.qlog.Printf("Path: %s",r.URL.Query().Encode())
 	failOnError(u.qlog,err,"client: could not read response body:")
+	if len(resBody) == 0 {
+		resBody = []byte(r.URL.Query().Encode())
+	}
+	u.qlog.Printf("send %s",resBody)
 	u.SubmitBytes(resBody)
 }
 

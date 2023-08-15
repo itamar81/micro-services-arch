@@ -9,7 +9,7 @@ import (
 type Users struct{
 	*Queue
 }
-func NewUserQueue(l *log.Logger,ch *amqp.Channel) *Users{
+func NewUsers(l *log.Logger,ch *amqp.Channel) *Users{
 	qq := NewQueue(l,ch,"users")
 	return &Users{qq}
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/itamar81/micro-service-arch/messageq/publisher/queues"
+	q "github.com/itamar81/micro-service-arch/messageq/publisher/queues"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"os"
 	"fmt"
@@ -15,6 +15,7 @@ func getEnv(key, fallback string) string {
     }
     return fallback
 }
+// "amqp://user:vkbHAhGx0KPiONXR@34.133.42.205:5672/"
 var rabbit_host = getEnv("RABBIT_HOST","rabbitmq.rabbitmq.svc.cluster.local")
 var rabbit_port = getEnv("RABBIT_PORT","5672") 
 var rabbit_user = getEnv("RABBIT_USERNAME","user")
@@ -26,8 +27,8 @@ func main(){
 	mux := http.NewServeMux()
 	
 	ch := openQueueConnection(l)
-	userQueue := queues.NewUserQueue(l,ch)
-	storeQueue := queues.NewStoreQueue(l,ch)
+	userQueue := q.NewUsers(l,ch)
+	storeQueue := q.NewStore(l,ch)
 	mux.Handle("/users",userQueue)
 	mux.Handle("/store",storeQueue)
 	mux.HandleFunc("/",handleRoot)
@@ -54,7 +55,7 @@ func openQueueConnection(l *log.Logger)  *amqp.Channel {
 	rabbit_port)
 
 	conn, err := amqp.Dial(rabbit_url)
-	// "amqp://user:vkbHAhGx0KPiONXR@34.133.42.205:5672/"
+	
 	failOnError(l,err, "Failed to connect to RabbitMQ")
 	ch, err := conn.Channel()
 	failOnError(l,err, "Failed to open a channel")
